@@ -16,33 +16,20 @@ $(function () {
     }
 
     function login() {
-        var state = encodeURIComponent(encodeURIComponent(new Date()).replace(/%/g, ""));
-        localStorage.setItem("state", state);
-        localStorage.setItem("time", Date.parse(new Date()) / 1000);
-        window.location.href = "https://github.com/login/oauth/authorize?client_id=" + client_id + "&redirect_uri=" + redirect_uri + "&scope=" + scope + "&state=" + encodeURIComponent(state);
+        window.location.href = "https://github.com/login/oauth/authorize?client_id=" + client_id + "&redirect_uri=" + redirect_uri + "&scope=" + scope;
     }
 
     // 判断url中是否有state和code字段
     if (window.location.href.indexOf("state=") > 0 && window.location.href.indexOf("code=")) {
         console.log('get access token');
-        var oldState = localStorage.getItem("state");
-        var oldTime = localStorage.getItem("time") || 0;
-        var time = Date.parse(new Date()) / 1000 - parseInt(oldTime);
-        if (time < 0 || time > 600) {
-            //login();
-            return;
-        }
         var args = getQueryVariable(window.location.search.substring(1));
-        var state = decodeURIComponent(args["state"]);
         var code = args["code"];
-        if (oldState !== state || code === undefined || code.length === 0) {
+        if (code === undefined || code.length === 0) {
             //login();
             console.log("check failed");
             return;
         }
-        console.log(state);
-        console.log(code);
-        $.post("https://github.com/login/oauth/access_token", { "client_id": client_id, "client_secret": client_secret, "code": code, "state": encodeURIComponent(state) }, function (response) {
+        $.post("https://github.com/login/oauth/access_token", { "client_id": client_id, "client_secret": client_secret, "code": code}, function (response) {
             // process responseF
             args = getQueryVariable(response.data);
             var access_token = args["access_token"];
