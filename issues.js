@@ -21,11 +21,6 @@ $(function () {
         localStorage.setItem("time", Date.parse(new Date()) / 1000);
         window.location.href = "https://github.com/login/oauth/authorize?client_id=" + client_id + "&redirect_uri=" + redirect_uri + "&scope=" + scope + "&state=" + encodeURIComponent(state);
     }
-    if (localStorage.getItem("access_token") === null) {
-        // 未登录
-        login();
-        return;
-    }
 
     // 判断url中是否有state和code字段
     if (window.location.href.indexOf("state=") > 0 && window.location.href.indexOf("code=")) {
@@ -51,12 +46,18 @@ $(function () {
             // process responseF
             args = getQueryVariable(response.data);
             var access_token = args["access_token"];
-            if(access_token===undefined||access_token.length===0){
+            if (access_token === undefined || access_token.length === 0) {
                 console.log("get access_token failed");
                 return;
             }
             localStorage.setItem("access_token", access_token);
         });
+    }
+
+    if (localStorage.getItem("access_token") === null) {
+        // 未登录
+        login();
+        return;
     }
 
     var access_token = localStorage.get("access_token");
