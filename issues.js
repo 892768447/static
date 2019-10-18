@@ -20,7 +20,7 @@ $(function () {
     }
 
     // 判断url中是否有state和code字段
-    if (window.location.href.indexOf("state=") > 0 && window.location.href.indexOf("code=")) {
+    if (window.location.href.indexOf("code=")) {
         console.log('get access token');
         var args = getQueryVariable(window.location.search.substring(1));
         var code = args["code"];
