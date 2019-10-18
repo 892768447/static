@@ -16,12 +16,12 @@ $(function () {
     }
 
     function login() {
-        var state = encodeURIComponent(new Date()).replace(/%/g, "");
+        var state = encodeURIComponent(encodeURIComponent(new Date()).replace(/%/g, ""));
         localStorage.setItem("state", state);
         localStorage.setItem("time", Date.parse(new Date()) / 1000);
-        window.location.href = "https://github.com/login/oauth/authorize?client_id=" + client_id + "&redirect_uri=" + redirect_uri + "&scope=" + encodeURIComponent(scope) + "&state=" + encodeURIComponent(state);
+        window.location.href = "https://github.com/login/oauth/authorize?client_id=" + client_id + "&redirect_uri=" + redirect_uri + "&scope=" + scope + "&state=" + encodeURIComponent(state);
     }
-    if (localStorage.getItem("session") === null) {
+    if (localStorage.getItem("access_token") === null) {
         // 未登录
         login();
         return;
@@ -40,11 +40,24 @@ $(function () {
         var args = getQueryVariable(window.location.search.substring(1));
         var state = args["state"];
         var code = args["code"];
-        if (oldState !== state || code === undefined) {
-            login();
+        if (oldState !== state || code === undefined || code.length === 0) {
+            //login();
+            console.log("check failed");
             return;
         }
         console.log(state);
         console.log(code);
+        $.post("https://github.com/login/oauth/access_token", { "client_id": client_id, "client_secret": client_secret, "code": code, "state": state }, function (response) {
+            // process response
+            args = getQueryVariable(response.data);
+            var access_token = args["access_token"];
+            if(access_token===undefined||access_token.length===0){
+                console.log("get access_token failed");
+                return;
+            }
+            localStorage.setItem("access_token", access_token);
+        });
     }
+
+    var access_token = localStorage.get("access_token");
 });
