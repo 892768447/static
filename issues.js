@@ -38,7 +38,7 @@ $(function () {
             return;
         }
         var args = getQueryVariable(window.location.search.substring(1));
-        var state = args["state"];
+        var state = decodeURIComponent(args["state"]);
         var code = args["code"];
         if (oldState !== state || code === undefined || code.length === 0) {
             //login();
@@ -47,8 +47,8 @@ $(function () {
         }
         console.log(state);
         console.log(code);
-        $.post("https://github.com/login/oauth/access_token", { "client_id": client_id, "client_secret": client_secret, "code": code, "state": state }, function (response) {
-            // process response
+        $.post("https://github.com/login/oauth/access_token", { "client_id": client_id, "client_secret": client_secret, "code": code, "state": encodeURIComponent(state) }, function (response) {
+            // process responseF
             args = getQueryVariable(response.data);
             var access_token = args["access_token"];
             if(access_token===undefined||access_token.length===0){
