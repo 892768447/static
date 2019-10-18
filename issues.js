@@ -32,9 +32,9 @@ $(function () {
         console.log('get access token');
         var oldState = localStorage.getItem("state");
         var oldTime = localStorage.getItem("time") || 0;
-        var time = Date.parse(new Date()) / 1000 - oldTime;
+        var time = Date.parse(new Date()) / 1000 - parseInt(oldTime);
         if (time < 0 || time > 600) {
-            login();
+            //login();
             return;
         }
         var args = getQueryVariable(window.location.search.substring(1));
