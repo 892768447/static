@@ -1,7 +1,7 @@
 $(function () {
 
-    var client_id = "b2586560cc31ebdf329f";
-    var client_secret = "ec9ec941b90691e9c0d9c0bff5a8e9d576f4e347";
+    var client_id = "545b4972e16c6d7ac22c";
+    var client_secret = "443e8bcbe931f64f212882fc3d1e246aa416bdec";
     var redirect_uri = "https://892768447.github.io/static/index.html";
     var scope = "read:user";
     var access_token = localStorage.getItem("GT_ACCESS_TOKEN");
