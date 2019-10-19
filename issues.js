@@ -20,7 +20,7 @@ $(function () {
     }
 
     // 判断url中是否有state和code字段
-    if (window.location.href.indexOf("code=")) {
+    if (window.location.href.indexOf("code=") > -1) {
         console.log('get access token');
         var args = getQueryVariable(window.location.search.substring(1));
         var code = args["code"];
@@ -30,7 +30,7 @@ $(function () {
             return;
         }
         $.post("https://github.com/login/oauth/access_token", { "client_id": client_id, "client_secret": client_secret, "code": code}, function (response) {
-            // process responseF
+            // process response
             args = getQueryVariable(response.data);
             var access_token = args["access_token"];
             if (access_token === undefined || access_token.length === 0) {
