@@ -4,48 +4,46 @@ $(function () {
     var client_secret = "ec9ec941b90691e9c0d9c0bff5a8e9d576f4e347";
     var redirect_uri = "https://892768447.github.io/static/index.html";
     var scope = "read:user";
+    var access_token = localStorage.getItem("GT_ACCESS_TOKEN");
 
-    function getQueryVariable(url) {
-        var args = {};
-        var vars = url.split("&");
-        for (var i = 0; i < vars.length; i++) {
-            var pair = vars[i].split("=");
-            args[pair[0]] = pair[1];
-        }
-        return args;
-    }
+    function queryParse() {
+        var search = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : window.location.search;
+
+        if (!search) return {};
+        var queryString = search[0] === '?' ? search.substring(1) : search;
+        var query = {};
+        queryString.split('&').forEach(function (queryStr) {
+            var _queryStr$split = queryStr.split('='),
+                _queryStr$split2 = (0, _slicedToArray3.default)(_queryStr$split, 2),
+                key = _queryStr$split2[0],
+                value = _queryStr$split2[1];
+            /* istanbul ignore else */
+
+
+            if (key) query[decodeURIComponent(key)] = decodeURIComponent(value);
+        });
+
+        return query;
+    };
 
     function login() {
         window.location.href = "https://github.com/login/oauth/authorize?client_id=" + client_id + "&redirect_uri=" + redirect_uri + "&scope=" + scope;
     }
 
-    // 判断url中是否有state和code字段
-    if (window.location.href.indexOf("code=") > -1) {
+    var query = (0, queryParse)();
+    if (query.code) {
         console.log('get access token');
-        var args = getQueryVariable(window.location.search.substring(1));
-        var code = args["code"];
-        if (code === undefined || code.length === 0) {
-            //login();
-            console.log("check failed");
+        $.getJSON("https://github.com/login/oauth/access_token?client_id=" + client_id + "&client_secret=" + client_secret + "&code=" + code, function (response) {
+            console.log(response);
+            access_token = response.access_token;
+            localStorage.setItem("GT_ACCESS_TOKEN", access_token);
+        });
+    } else {
+        if (access_token === null || access_token.length === 0) {
+            // 未登录
+            setTimeout(login, 5000);
             return;
         }
-        $.post("https://github.com/login/oauth/access_token", { "client_id": client_id, "client_secret": client_secret, "code": code}, function (response) {
-            // process response
-            args = getQueryVariable(response.data);
-            var access_token = args["access_token"];
-            if (access_token === undefined || access_token.length === 0) {
-                console.log("get access_token failed");
-                return;
-            }
-            localStorage.setItem("access_token", access_token);
-        });
     }
 
-    if (localStorage.getItem("access_token") === null) {
-        // 未登录
-        login();
-        return;
-    }
-
-    var access_token = localStorage.get("access_token");
 });
