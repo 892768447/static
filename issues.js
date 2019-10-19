@@ -20,14 +20,13 @@ $(function () {
 
     var code = queryParse("code");
     if (code) {
-        console.log('get access token');
-        $.getJSON("https://github.com/login/oauth/access_token?client_id=" + client_id + "&client_secret=" +
-            client_secret + "&code=" + code,
+        console.log("get access token");
+        $.post("https://github.com/login/oauth/access_token", { client_id: client_id, client_secret: client_secret, code: code },
             function (response) {
                 console.log(response);
                 access_token = response.access_token;
                 localStorage.setItem("GT_ACCESS_TOKEN", access_token);
-            });
+            }, "json");
     } else {
         if (access_token === null || access_token.length === 0) {
             // 未登录
