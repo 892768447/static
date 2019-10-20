@@ -62,18 +62,18 @@
         {{/each}}
         {{if pages}}
         <nav id="page-nav" >
-            {{if pages.current && pages.current != 1 && pages.pages.length > 1}}
-            <a class="extend prev" rel="prev" href="{{pages.href}}?page={{pages.current - 1}}">&laquo; Prev</a>
+            {{if pages.prev_page !== pages.current_page}}
+            <a class="extend prev" rel="prev" href="{{pages.href}}?page={{pages.prev_page}}">&laquo; Prev</a>
             {{/if}}
             {{each pages.pages}}
-            {{if pages.current == $value}}
+            {{if pages.current_page === $value}}
             <span class="page-number current">{{$value}}</span>
             {{else}}
             <a class="page-number" href="{{pages.href}}?page={{$value}}">{{$value}}</a>
             {{/if}}
             {{/each}}
-            {{if pages.current && pages.current != pages.pages.length && pages.pages.length > 1}}
-            <a class="extend next" rel="next" href="{{pages.href}}?page={{pages.current + 1}}">Next &raquo;</a>
+            {{if pages.next_page !== pages.current_page}}
+            <a class="extend next" rel="next" href="{{pages.href}}?page={{pages.next_page}}">Next &raquo;</a>
             {{/if}}
         </nav>
         {{/if}}

@@ -27,16 +27,35 @@ $(function () {
             dataType: "json",
             success: function (response, status, xhr) {
                 var links = xhr.getResponseHeader('Link');
-                var reg = /page=(\d+)/g;
-                var next_page = reg.exec(links);
-                var total_page = reg.exec(links);
-                try {
-                    next_page = parseInt(next_page[1]);
-                    total_page = parseInt(total_page[1]);
-                } catch (error) {
-                    next_page = 2;
-                    total_page = 1;
+                var regPrev = /rel="prev"/g;
+                var regNext = /rel="next"/g;
+                var regLast = /rel="last"/g;
+                var regPage = /page=(\d+)/g;
+                var prev_page = 1;
+                var next_page = 1;
+                var total_page = 1;
+                if (regPrev.test(links)) {
+                    // 匹配到上一页
+                    prev_page = parseInt(regPage.exec(links));
                 }
+                if (regNext.test(links)) {
+                    // 匹配到下一页
+                    next_page = parseInt(regPage.exec(links));
+                }
+                if (regLast.test(links)) {
+                    //匹配到最后一页
+                    total_page = parseInt(regPage.exec(links));
+                }
+                // var reg = /page=(\d+)/g;
+                // var next_page = reg.exec(links);
+                // var total_page = reg.exec(links);
+                // try {
+                //     next_page = parseInt(next_page[1]);
+                //     total_page = parseInt(total_page[1]);
+                // } catch (error) {
+                //     next_page = 2;
+                //     total_page = 1;
+                // }
                 // 排除pull
                 var new_response = [];
                 response.forEach(element => {
@@ -47,7 +66,10 @@ $(function () {
                 var infos = {
                     issues: new_response, pages: {
                         href: window.location.href.split("?")[0],
-                        current: next_page - 1,
+                        prev_page: prev_page,
+                        next_page: next_page,
+                        current_page: current_page,
+                        total_page: total_page,
                         pages: Array.from({ length: total_page }, (item, index) => index + 1)
                     }
                 };
@@ -78,14 +100,14 @@ $(function () {
     }
 
     // 获取issues列表
-    var page = queryParse("page");
-    if (page) {
+    var current_page = queryParse("page");
+    if (current_page) {
         try {
-            page = parseInt(page);
+            current_page = parseInt(current_page);
         } catch (error) {
-            page = 1;
+            current_page = 1;
         }
     }
-    getIssues(page);
+    getIssues(current_page);
 
 });
