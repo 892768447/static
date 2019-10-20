@@ -18,11 +18,11 @@ $(function () {
             "&redirect_uri=" + redirect_uri + "&scope=" + scope;
     }
 
-    function getIssues(page) {
+    function getIssues(current_page) {
         $.ajax({
             type: "GET",
             url: "https://api.github.com/repos/PyQt5/PyQt/issues",
-            data: { state: "all", sort: "created", direction: "desc", page: page },
+            data: { state: "all", sort: "created", direction: "desc", page: current_page },
             headers: { Authorization: "token " + access_token },
             dataType: "json",
             success: function (response, status, xhr) {
@@ -36,11 +36,11 @@ $(function () {
                 var total_page = 1;
                 if (regPrev.test(links)) {
                     // 匹配到上一页
-                    prev_page = parseInt(regPage.exec(links));
+                    prev_page = parseInt(regPage.exec(links)[1]);
                 }
                 if (regNext.test(links)) {
                     // 匹配到下一页
-                    next_page = parseInt(regPage.exec(links));
+                    next_page = parseInt(regPage.exec(links)[1]);
                 } else {
                     //当前是最后一页时
                     next_page = null;
@@ -48,7 +48,7 @@ $(function () {
                 }
                 if (regLast.test(links)) {
                     //匹配到最后一页
-                    total_page = parseInt(regPage.exec(links));
+                    total_page = parseInt(regPage.exec(links)[1]);
                 }
                 // var reg = /page=(\d+)/g;
                 // var next_page = reg.exec(links);
