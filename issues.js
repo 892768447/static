@@ -32,18 +32,16 @@ $(function () {
                 var next_page = reg.exec(links);
                 var total_page = reg.exec(links);
                 try {
-                    var current_page = parseInt(page);
                     next_page = parseInt(next_page[1]);
                     total_page = parseInt(total_page[1]);
                 } catch (error) {
-                    var current_page = 1;
-                    next_page = 1;
+                    next_page = 2;
                     total_page = 1;
                 }
                 var html = template('tpl-issues', {
                     issues: response, pages: {
                         href: window.location.href.split("?")[0],
-                        current: current_page,
+                        current: next_page - 1,
                         pages: Array.from({ length: total_page }, (item, index) => index + 1)
                     }
                 });
