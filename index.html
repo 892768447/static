@@ -73,7 +73,7 @@
             {{/if}}
             {{/each}}
             {{if pages.current && pages.current != pages.pages.length && pages.pages.length > 1}}
-            <a class="extend next" rel="next" href="{{pages.href}}?page={{pages.pages[pages.pages.length - 1]}}">Next &raquo;</a>
+            <a class="extend next" rel="next" href="{{pages.href}}?page={{pages.current + 1}}">Next &raquo;</a>
             {{/if}}
         </nav>
         {{/if}}

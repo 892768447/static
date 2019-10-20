@@ -37,6 +37,13 @@ $(function () {
                     next_page = 2;
                     total_page = 1;
                 }
+                // 排除pull
+                var new_response = [];
+                response.forEach(element => {
+                    if (element.html_url.indexOf("/pull/") === -1) {
+                        new_response.push(element);
+                    }
+                });
                 var infos = {
                     issues: response, pages: {
                         href: window.location.href.split("?")[0],
