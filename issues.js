@@ -45,7 +45,7 @@ $(function () {
                     }
                 });
                 var infos = {
-                    issues: response, pages: {
+                    issues: new_response, pages: {
                         href: window.location.href.split("?")[0],
                         current: next_page - 1,
                         pages: Array.from({ length: total_page }, (item, index) => index + 1)
