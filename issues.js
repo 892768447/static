@@ -72,7 +72,7 @@ $(function () {
                         href: window.location.href.split("?")[0],
                         prev_page: prev_page,
                         next_page: next_page,
-                        current_page: current_page,
+                        current_page: current_page || 1,
                         total_page: total_page,
                         pages: Array.from({ length: total_page }, (item, index) => index + 1)
                     }
@@ -107,7 +107,7 @@ $(function () {
     var current_page = queryParse("page");
     if (current_page) {
         try {
-            current_page = parseInt(current_page);
+            current_page = parseInt(current_page) || 1;
         } catch (error) {
             current_page = 1;
         }

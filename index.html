@@ -62,7 +62,7 @@
         {{/each}}
         {{if pages}}
         <nav id="page-nav" >
-            {{if pages.prev_page !== pages.current_page}}
+            {{if pages.current_page && pages.prev_page !== pages.current_page}}
             <a class="extend prev" rel="prev" href="{{pages.href}}?page={{pages.prev_page}}">&laquo; Prev</a>
             {{/if}}
             {{each pages.pages}}
@@ -72,7 +72,7 @@
             <a class="page-number" href="{{pages.href}}?page={{$value}}">{{$value}}</a>
             {{/if}}
             {{/each}}
-            {{if pages.next_page !== pages.current_page}}
+            {{if pages.next_page && pages.total_page !== pages.current_page}}
             <a class="extend next" rel="next" href="{{pages.href}}?page={{pages.next_page}}">Next &raquo;</a>
             {{/if}}
         </nav>
