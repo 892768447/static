@@ -18,21 +18,55 @@ $(function () {
             "&redirect_uri=" + redirect_uri + "&scope=" + scope;
     }
 
+    function getIssues(page) {
+        $.ajax({
+            type: "GET",
+            url: "https://api.github.com/repos/PyQt5/PyQt/issues",
+            data: { state: "all", sort: "created", direction: "desc", page:  page},
+            headers: { Authorization: "token " + access_token },
+            dataType: "json",
+            success: function (response, status, xhr) {
+                console.log(response);
+                var links = xhr.getResponseHeader('Link');
+                var reg = /page=(\d+)/g;
+                var current_page = reg.exec(links);
+                var total_page = reg.exec(links);
+                console.log(current_page[1]);
+                console.log(total_page[1]);
+                var html = template('tpl-issues', {issues: [response[29]]});
+                $("#issues-list").html(html);
+            },
+            error: function (xhr, errorType, error) {
+                console.error(xhr);
+            }
+        });
+    }
+
     var code = queryParse("code");
     if (code) {
-        console.log("get access token");
         $.post("https://cors-anywhere.herokuapp.com/https://github.com/login/oauth/access_token", { client_id: client_id, client_secret: client_secret, code: code },
             function (response) {
-                console.log(response);
                 access_token = response.access_token;
                 localStorage.setItem("GT_ACCESS_TOKEN", access_token);
+                window.location.href = window.location.href.split("?")[0]
             }, "json");
     } else {
         if (access_token === null || access_token.length === 0) {
             // 未登录
-            setTimeout(login, 5000);
+            login();
             return;
         }
     }
+
+    // 获取issues列表
+    var page = queryParse("page");
+    if (page) {
+        try {
+            page = parseInt(page);
+        } catch (error) {
+            page = 1;
+        }
+    }
+    getIssues(page);
 
 });
