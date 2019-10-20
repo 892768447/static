@@ -10,7 +10,7 @@
     <script src="zepto.min.js"></script>
     <script src="template-web.js"></script>
     <script>
-        template.defaults.imports.dateFormat = function(value) {
+        template.defaults.imports.dateFormat = function (value) {
             return value.split("T")[0];
         }
     </script>
@@ -60,6 +60,23 @@
             </div>
         </article>
         {{/each}}
+        {{if pages}}
+        <nav id="page-nav" >
+            {{if pages.current != 1 && pages.pages.length > 1}}
+            <a class="extend prev" rel="prev" href="{{pages.href}}?page={{pages.current - 1}}">&laquo; Prev</a>
+            {{/if}}
+            {{each pages.pages}}
+            {{if pages.current == value}}
+            <span class="page-number current">{{value}}</span>
+            {{else}}
+            <a class="page-number" href="{{pages.href}}?page={{value}}">{{value}}</a>
+            {{/if}}
+            {{/each}}
+            {{if pages.current != pages.pages.length && pages.pages.length > 1}}
+            <a class="extend next" rel="next" href="/page/4/">Next &raquo;</a>
+            {{/if}}
+        </nav>
+        {{/if}}
     </script>
 </head>
 

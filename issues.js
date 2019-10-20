@@ -22,18 +22,31 @@ $(function () {
         $.ajax({
             type: "GET",
             url: "https://api.github.com/repos/PyQt5/PyQt/issues",
-            data: { state: "all", sort: "created", direction: "desc", page:  page},
+            data: { state: "all", sort: "created", direction: "desc", page: page },
             headers: { Authorization: "token " + access_token },
             dataType: "json",
             success: function (response, status, xhr) {
                 console.log(response);
                 var links = xhr.getResponseHeader('Link');
                 var reg = /page=(\d+)/g;
-                var current_page = reg.exec(links);
+                var next_page = reg.exec(links);
                 var total_page = reg.exec(links);
-                console.log(current_page[1]);
-                console.log(total_page[1]);
-                var html = template('tpl-issues', {issues: [response[29]]});
+                try {
+                    var current_page = parseInt(page);
+                    next_page = parseInt(next_page[1]);
+                    total_page = parseInt(total_page[1]);
+                } catch (error) {
+                    var current_page = 1;
+                    next_page = 1;
+                    total_page = 1;
+                }
+                var html = template('tpl-issues', {
+                    issues: response, pages: {
+                        href: window.location.href.split("?")[0],
+                        current: current_page,
+                        pages: Array.from({ length: total_page }, (item, index) => index + 1)
+                    }
+                });
                 $("#issues-list").html(html);
             },
             error: function (xhr, errorType, error) {
