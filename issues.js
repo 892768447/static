@@ -41,6 +41,10 @@ $(function () {
                 if (regNext.test(links)) {
                     // 匹配到下一页
                     next_page = parseInt(regPage.exec(links));
+                } else {
+                    //当前是最后一页时
+                    next_page = null;
+                    total_page = prev_page > 1 ? prev_page + 1 : 1;
                 }
                 if (regLast.test(links)) {
                     //匹配到最后一页
