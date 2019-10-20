@@ -26,7 +26,6 @@ $(function () {
             headers: { Authorization: "token " + access_token },
             dataType: "json",
             success: function (response, status, xhr) {
-                console.log(response);
                 var links = xhr.getResponseHeader('Link');
                 var reg = /page=(\d+)/g;
                 var next_page = reg.exec(links);
@@ -38,13 +37,15 @@ $(function () {
                     next_page = 2;
                     total_page = 1;
                 }
-                var html = template('tpl-issues', {
+                var infos = {
                     issues: response, pages: {
                         href: window.location.href.split("?")[0],
                         current: next_page - 1,
                         pages: Array.from({ length: total_page }, (item, index) => index + 1)
                     }
-                });
+                };
+                console.log(infos);
+                var html = template('tpl-issues', infos);
                 $("#issues-list").html(html);
             },
             error: function (xhr, errorType, error) {
